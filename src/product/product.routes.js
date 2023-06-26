@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const controller = require('./product.controller');
+const controller = require('./payment.controller');
 
-router.get("/product/:id", controller.getById);
-router.get("/products", controller.getAll);
-router.post("/products", controller.create);
+router.get("/payment/:id", controller.getById);
+router.get("/payment", controller.getAll);
+router.post("/payment", controller.create);
 
 module.exports = router;
