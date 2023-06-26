@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const routes = require('./src/product/product.routes');
+const routes = require('./src/payment/payment.routes');
 const authMiddleware = require('./src/middleware/auth.middleware');
 
 const port = 3001;
