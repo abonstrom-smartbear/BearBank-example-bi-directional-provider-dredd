@@ -1,6 +1,6 @@
-const Product = require('./payment');
+const Payment = require('./payment');
 
-class ProductRepository {
+class PaymentRepository {
 
     constructor() {
         this.payments = new Map([
