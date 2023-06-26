@@ -1,12 +1,12 @@
-const Product = require("./payment");
-const ProductRepository = require("./payment.repository");
+const Payment = require("./payment");
+const PaymentRepository = require("./payment.repository");
 
 const repository = new PaymentRepository();
 
 exports.create = async (req, res) => {
     const data = req.body
     const payment = new Payment(data.id, data.name, data.version, data.price, data.account)
-    payment ? res.send(payment) : res.status(400).send({message: "invalid product"})
+    payment ? res.send(payment) : res.status(400).send({message: "invalid payment"})
 };
 exports.getAll = async (req, res) => {
     res.send(await repository.fetchAll())
