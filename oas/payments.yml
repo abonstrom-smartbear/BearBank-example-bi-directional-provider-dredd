@@ -1,26 +1,30 @@
 openapi: 3.0.1
 info:
-  title: Product API
-  description: PactFlow Product API demo
+  title: Payments API
+  description: BearBank Payments API
   version: 1.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/BearBank/PaymentsAPI/1.0.0
 paths:
-  /products:
+  /payments:
     post:
-      summary: Create a product
-      description: Creates a new product
-      operationId: createProduct
+      summary: Create a payment
+      description: Creates a new payment
+      operationId: createpayment
       requestBody:
-        description: Create a new Product
+        description: Create a new payments
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/payment'
             examples:
               application/json:
                 value:
                   id: "1234"
-                  type: "food"
+                  account: "Customer 1"
                   price: 42
       responses:
         "200":
@@ -28,17 +32,18 @@ paths:
           content:
             "application/json; charset=utf-8":
               schema:
-                  $ref: '#/components/schemas/Product'
+                oneOf:
+                  - $ref: '#/components/schemas/payment'
               examples:
                 application/json:
                   value:
                     id: "1234"
-                    type: "food"
+                    account: "Customer 1"
                     price: 42
     get:
-      summary: List all products
-      description: Returns all products
-      operationId: getAllProducts
+      summary: List all payments
+      description: Returns all payments
+      operationId: getAllPayments
       responses:
         "200":
           description: successful operation
@@ -47,28 +52,25 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: '#/components/schemas/payment'
               examples:
                 application/json:
                   value:
                     - id: "1234"
-                      type: "food"
+                      account: "Customer 1"
                       price: 42
-                      # name: "pizza"
-                      # version: "1.0.0"
-                      # see https://github.com/apiaryio/dredd/issues/1430 for why
         "400":
           description: Invalid ID supplied
           content: {}
-  /product/{id}:
+  /payment/{id}:
     get:
-      summary: Find product by ID
-      description: Returns a single product
-      operationId: getProductByID
+      summary: Find payment by ID
+      description: Returns a single payment
+      operationId: getPaymentByID
       parameters:
       - name: id
         in: path
-        description: ID of product to get
+        description: ID of payment to get
         schema:
           type: string
         required: true
@@ -79,34 +81,30 @@ paths:
           content:
             "application/json; charset=utf-8":
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/payment'
               examples:
                 application/json:
                   value:
                     id: "1234"
-                    type: "food"
+                    account: "Customer 1"
                     price: 42
-                    # name: "pizza"
-                    # version: "1.0.0"
-                    # see https://github.com/apiaryio/dredd/issues/1430 for why
         "400":
           description: Invalid ID supplied
           content: {}
         "404":
-          description: Product not found
+          description: Payment not found
           content: {}
 components:
   schemas:
-    Product:
+    payment:
       type: object
       required:
         - id
-        - name
+        - account
         - price
+      additionalProperties: false
       properties:
         id:
-          type: string
-        type:
           type: string
         name:
           type: string
@@ -114,3 +112,5 @@ components:
           type: string
         price:
           type: number
+        account:
+          type: string
