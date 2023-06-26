@@ -1,19 +1,19 @@
-const Product = require("./product");
-const ProductRepository = require("./product.repository");
+const Product = require("./payment");
+const ProductRepository = require("./payment.repository");
 
-const repository = new ProductRepository();
+const repository = new PaymentRepository();
 
 exports.create = async (req, res) => {
     const data = req.body
-    const product = new Product(data.id, data.type, data.name, data.version, data.price)
-    product ? res.send(product) : res.status(400).send({message: "invalid product"})
+    const payment = new Payment(data.id, data.name, data.version, data.price, data.account)
+    payment ? res.send(payment) : res.status(400).send({message: "invalid product"})
 };
 exports.getAll = async (req, res) => {
     res.send(await repository.fetchAll())
 };
 exports.getById = async (req, res) => {
-    const product = await repository.getById(req.params.id);
-    product ? res.send(product) : res.status(404).send({message: "Product not found"})
+    const payment = await repository.getById(req.params.id);
+    payment ? res.send(payment) : res.status(404).send({message: "Payment not found"})
 };
 
 exports.repository = repository;
