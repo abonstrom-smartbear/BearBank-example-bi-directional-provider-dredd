@@ -1,0 +1,317 @@
+openapi: 3.0.1
+info:
+  title: BETA Payments API
+  description: Updated version of payments API. Document changes
+  version: NotSemantic
+servers:
+- url: https://virtserver.swaggerhub.com/BearBank/BETAPaymentsAPI/NotSemantic
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Payments
+  description: Everything related to individual payments
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+- name: Payments Info
+  description: Additional payment information
+  externalDocs:
+    description: Find out more about our store
+    url: http://swagger.io
+paths:
+  /payments:
+    get:
+      tags:
+      - Payments
+      summary: List all payments
+      description: Returns all payments
+      operationId: getAllPayments
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/payment'
+              examples:
+                application/json:
+                  value:
+                  - id: "12341234123"
+                    amount: 100.0
+                    currency: USD
+                    recipient: Dio Brando
+                    accountNumber: "19832187900"
+                    note: Payment for services rendered
+        "400":
+          description: Invalid ID supplied
+          content: {}
+    post:
+      tags:
+      - Payments
+      summary: Create a payment
+      description: Creates a new payment
+      operationId: createpayment
+      requestBody:
+        description: Create a new payments
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment'
+            examples:
+              application/json:
+                value:
+                  id: "1234565"
+                  amount: 100.0
+                  currency: USD
+                  recipient: Dio Brando
+                  accountNumber: "19832187900"
+                  note: Payment for services rendered
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              examples:
+                application/json:
+                  value:
+                    id: "1234"
+                    amount: 100.0
+                    currency: USD
+                    recipient: Dio Brando
+                    accountNumber: "19832187900"
+                    note: Payment for services rendered
+  /payment/{id}:
+    get:
+      tags:
+      - Payments
+      summary: Find payment by ID
+      description: Returns a single payment
+      operationId: getPaymentByID
+      parameters:
+      - name: id
+        in: path
+        description: ID of payment to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 10
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/payment'
+              examples:
+                application/json:
+                  value:
+                    id: "1234"
+                    amount: 100.0
+                    currency: USD
+                    recipient: Dio Brando
+                    accountNumber: "19832187900"
+                    note: Payment for services rendered
+        "400":
+          description: Invalid ID supplied
+          content: {}
+        "404":
+          description: Payments not found
+          content: {}
+  /payments/cancel/{id}:
+    delete:
+      tags:
+      - Payments
+      summary: Cancel Payment
+      description: Cancels a pending or scheduled payment.
+      parameters:
+      - name: id
+        in: path
+        description: ID of the payment to be canceled.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment successfully canceled.
+        "404":
+          description: Payment not found.
+        "500":
+          description: An error occurred during payment cancellation.
+  /payments/history:
+    get:
+      tags:
+      - Payments Info
+      summary: Payment History
+      description: Retrieves the transaction history.
+      parameters:
+      - name: accountId
+        in: query
+        description: ID of the account to retrieve payment history for.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation.
+        "404":
+          description: Account not found.
+        "500":
+          description: An error occurred while retrieving payment history.
+  /payments/fees:
+    get:
+      tags:
+      - Payments Info
+      summary: Payment Fees
+      description: Retrieves the applicable fees for a payment.
+      parameters:
+      - name: id
+        in: query
+        description: ID of the payment to retrieve fees for.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation.
+        "404":
+          description: Payment not found.
+        "500":
+          description: An error occurred while retrieving payment fees.
+  /payments/{id}/reverse:
+    put:
+      tags:
+      - Payments
+      summary: Reverse Payment
+      description: Reverses a completed payment.
+      parameters:
+      - name: id
+        in: path
+        description: ID of the payment to be reversed.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment successfully reversed.
+        "404":
+          description: Payment not found.
+        "500":
+          description: An error occurred during payment reversal.
+  /payments/{id}/status:
+    get:
+      tags:
+      - Payments
+      summary: Payment Status
+      description: Retrieves the status of a specific payment.
+      parameters:
+      - name: id
+        in: path
+        description: ID of the payment to retrieve the status for.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation.
+        "404":
+          description: Payment not found.
+        "500":
+          description: An error occurred while retrieving payment status.
+  /payments/schedule:
+    get:
+      tags:
+      - Payments Info
+      summary: Schedule Payment
+      description: View scheduled payments.
+      responses:
+        "200":
+          description: Payment successfully scheduled.
+        "400":
+          description: Invalid request.
+        "500":
+          description: An error occurred during payment scheduling.
+    post:
+      tags:
+      - Payments
+      summary: Schedule Payment
+      description: Schedules a payment for future execution.
+      requestBody:
+        description: Payment details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment'
+        required: true
+      responses:
+        "200":
+          description: Payment successfully scheduled.
+        "400":
+          description: Invalid request.
+        "500":
+          description: An error occurred during payment scheduling.
+  /payments/{id}/receipt:
+    get:
+      tags:
+      - Payments
+      summary: Payment Receipt
+      description: Retrieves the receipt for a completed payment.
+      parameters:
+      - name: id
+        in: path
+        description: ID of the payment to retrieve the receipt for.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: show me the money
+components:
+  schemas:
+    payment:
+      required:
+      - accountNumber
+      - amount
+      - currency
+      - note
+      - recipient
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        recipient:
+          type: string
+        accountNumber:
+          type: string
+        note:
+          type: string
+        type:
+          type: string
+        version:
+          type: string
+      additionalProperties: false
+    inline_response_200:
+      oneOf:
+      - $ref: '#/components/schemas/payment'
+x-aws-api-id: ir04l55g8j
